@@ -6,5 +6,6 @@ __pycache__/
 assets/external/
 .env
 venv/
+.venv/
 comandos.txt
 
