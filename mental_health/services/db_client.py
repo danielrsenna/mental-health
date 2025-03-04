@@ -1,6 +1,12 @@
+import os
+
+import dotenv
 from supabase import create_client
 from pymongo import MongoClient
 from pydantic import BaseModel
+
+
+dotenv.load_dotenv()
 
 class _SupaBase:
 
@@ -31,15 +37,15 @@ class _MongoDB:
 class DatabaseClient:
 
     MODELS = {
-        'supabase': lambda url, key, table_name : _SupaBase(url, key, table_name),
-        'mongodb': lambda url, _, table_name : _MongoDB(url, table_name)
+        'supabase': lambda: _SupaBase(url=os.environ['SUPABASE_URL'], key=os.environ['SUPABASE_KEY'], table_name='mental_health'),
+        'mongodb': lambda: _MongoDB(url=os.environ['MONGO_URL'], table_name='mental_health')
     }
 
-    def __init__(self, url: str, key: str, table_name: str, model: str):
+    def __init__(self, model: str):
         if model not in self.MODELS:
             raise ValueError(f'Model {model} not found.')
 
-        self._client = self.MODELS[model](url, key, table_name)
+        self._client = self.MODELS[model]()
 
     def table(self, table_name: str):
         self._client.table(table_name)
