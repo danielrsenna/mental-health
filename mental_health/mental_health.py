@@ -3,6 +3,7 @@ import reflex as rx
 
 from . import pages
 from .states import navigation
+from .states.chat import ChatState
 
 app = rx.App(
     theme=rx.theme(
@@ -17,6 +18,4 @@ app = rx.App(
 
 #Website Pages
 app.add_page(pages.homepage, navigation.HOME_ROUTE, title="Homepage")
-app.add_page(pages.chatpage, navigation.CHAT_ROUTE, title="Chat")
-
-
+app.add_page(pages.chatpage, navigation.CHAT_ROUTE, title="Chat", on_load=ChatState.on_load)

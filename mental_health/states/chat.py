@@ -13,12 +13,35 @@ def _stripe_chat_history(chat_history):
     )
 
 
-class State(rx.State):
+class ChatState(rx.State):
     # The current question being asked.
     question: str
 
     # Keep track of the chat history as a list of (question, answer) tuples.
     chat_history: list[tuple[str, str]]
+
+    # The user_id is stored in a cookie and is used to identify the user.
+    user_id: str = rx.Cookie(
+        name='user_id',
+        path='/',
+        secure=False,
+        max_age=60*60 # 1 hour
+    )
+
+    # The session_id is stored in a cookie and is used to identify the session.
+    session_id: str = rx.Cookie(
+        name='session_id',
+        path='/',
+        secure=False,
+        max_age=60*60 # 1 hour
+    )
+
+    def on_load(self):
+        if not self.user_id:
+            self.user_id = str(uuid.uuid4())
+
+        if not self.session_id:
+            self.session_id = str(uuid.uuid4())
 
     async def answer(self):
         chat_bot_client = GptClient()
@@ -38,9 +61,9 @@ class State(rx.State):
             yield
 
         db_client = DatabaseClient(model='mongodb')
-        db_client.table('mental_health').insert(Message(
-            user_id=uuid.uuid4(),
+        db_client.insert(Message(
+            user_id=self.user_id,
             content=f'User: {self.chat_history[-1][0]}\nBot: {self.chat_history[-1][1]}',
-            session_id=uuid.uuid4(),
+            session_id=self.session,
             prompt_id=uuid.uuid4(),
         ))
