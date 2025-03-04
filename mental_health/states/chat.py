@@ -64,7 +64,6 @@ class ChatState(rx.State):
         db_client = DatabaseClient(model='mongodb')
 
         question, answer = self.chat_history[-1]
-
         db_client.table('messages').insert(
             Message(
                 user_id=self.user_id,
