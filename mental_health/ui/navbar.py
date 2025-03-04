@@ -1,5 +1,5 @@
 import reflex as rx
-from .. import navigation
+#from .. import navigation
 
 def navbar() -> rx.Component:
     return rx.flex( #navbar como um todo

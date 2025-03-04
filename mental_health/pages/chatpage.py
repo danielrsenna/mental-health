@@ -2,56 +2,17 @@
 import reflex as rx
 
 
-from .chat_state import State
-
-
-#--- Style ---
-
-# Common styles for questions and answers.
-shadow = "rgba(0, 0, 0, 0.15) 0px 2px 8px"
-chat_margin = "20%"
-message_style = dict(
-    padding="1em",
-    border_radius="5px",
-    margin_y="0.5em",
-    box_shadow=shadow,
-    max_width="30em",
-    display="inline-block",
-)
-
-# Set specific styles for questions and answers.
-question_style = message_style | dict(
-    margin_left=chat_margin,
-    background_color=rx.color("gray", 4),
-)
-answer_style = message_style | dict(
-    margin_right=chat_margin,
-    background_color=rx.color("accent", 8),
-)
-
-# Styles for the action bar.
-input_style = dict(
-    border_width="1px",
-    padding="0.5em",
-    box_shadow=shadow,
-    width="350px",
-)
-button_style = dict(
-    background_color=rx.color("accent", 10),
-    box_shadow=shadow,
-)
-
-#--- Style ---
-
+from ..states.chat import State
+from ..styles import chatpage as style
 
 def qa(question: str, answer: str) -> rx.Component:
     return rx.box(
         rx.box(
-            rx.text(question, style=question_style),
+            rx.text(question, style=style.question_style),
             text_align="right",
         ),
         rx.box(
-            rx.text(answer, style=answer_style),
+            rx.text(answer, style=style.answer_style),
             text_align="left",
         ),
         margin_y="1em",
@@ -73,12 +34,12 @@ def action_bar() -> rx.Component:
             value=State.question,
             placeholder="Ask a question",
             on_change=State.set_question,
-            style=input_style,
+            style=style.input_style,
         ),
         rx.button(
             "Ask",
             on_click=State.answer,
-            style=button_style,
+            style=style.button_style,
         ),
     )
 
