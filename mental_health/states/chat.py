@@ -1,6 +1,7 @@
 import reflex as rx
 import uuid
 
+from mental_health.models.message import BOT_USER_ID
 from mental_health.services.gpt_client import GptClient
 from mental_health.services.db_client import DatabaseClient
 from mental_health.models import Message
@@ -61,8 +62,17 @@ class ChatState(rx.State):
             yield
 
         db_client = DatabaseClient(model='mongodb')
-        db_client.table('messages').insert(Message(
-            user_id=self.user_id,
-            content=f'User: {self.chat_history[-1][0]}\nBot: {self.chat_history[-1][1]}',
-            session_id=self.session_id,
+
+        question, answer = self.chat_history[-1]
+
+        db_client.table('messages').insert(
+            Message(
+                user_id=self.user_id,
+                content=question,
+                session_id=self.session_id,
+        )).insert(
+            Message(
+                user_id=BOT_USER_ID,
+                content=answer,
+                session_id=self.session_id,
         ))

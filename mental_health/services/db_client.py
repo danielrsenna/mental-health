@@ -58,4 +58,5 @@ class DatabaseClient:
         return self
 
     def insert(self, data: dict):
-        return self._client.insert(data)
+        self._client.insert(data)
+        return self
