@@ -38,7 +38,7 @@ class State(rx.State):
             yield
 
         db_client = DatabaseClient(model='mongodb')
-        db_client.insert(Message(
+        db_client.table('mental_health').insert(Message(
             user_id=uuid.uuid4(),
             content=f'User: {self.chat_history[-1][0]}\nBot: {self.chat_history[-1][1]}',
             session_id=uuid.uuid4(),
