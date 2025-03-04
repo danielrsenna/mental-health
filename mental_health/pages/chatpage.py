@@ -1,10 +1,7 @@
-# chatapp.py
 import reflex as rx
 
 from ..ui import sidebar_chat
-
-
-from ..states.chat import State
+from ..states.chat import ChatState
 from ..styles import chatpage as style
 
 def qa(question: str, answer: str) -> rx.Component:
@@ -24,7 +21,7 @@ def qa(question: str, answer: str) -> rx.Component:
 def chat() -> rx.Component:
     return rx.flex(
         rx.foreach(
-            State.chat_history,
+            ChatState.chat_history,
             lambda messages: qa(messages[0], messages[1]),
         ),
         width="40vw",
@@ -35,14 +32,14 @@ def chat() -> rx.Component:
 def action_bar() -> rx.Component:
     return rx.hstack(
         rx.input(
-            value=State.question,
+            value=ChatState.question,
             placeholder="Converse com Kuatan",
-            on_change=State.set_question,
+            on_change=ChatState.set_question,
             style=style.input_style,
         ),
         rx.button(
             "Enviar",
-            on_click=State.answer,
+            on_click=ChatState.answer,
             style=style.button_style,
         ),
     )
@@ -68,6 +65,3 @@ def chatpage() -> rx.Component:
         height="100vh",
         width="100vw",
     )
-
-
-
