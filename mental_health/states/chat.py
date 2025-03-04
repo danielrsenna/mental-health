@@ -1,9 +1,9 @@
-import os
-
-import dotenv
 import reflex as rx
+import uuid
 
 from mental_health.services.gpt_client import GptClient
+from mental_health.services.db_client import DatabaseClient
+from mental_health.models import Message
 
 
 def _stripe_chat_history(chat_history):
@@ -21,19 +21,26 @@ class State(rx.State):
     chat_history: list[tuple[str, str]]
 
     async def answer(self):
-        dotenv.load_dotenv()
-
-        client = GptClient()
+        chat_bot_client = GptClient()
 
         answer = ''
         self.chat_history.append((self.question, answer))
 
-        async for answer in client.answer(_stripe_chat_history(self.chat_history)):
-            if self.question:
-                self.question = ''
-                yield
+        # clear the prompt input
+        self.question = ''
+        yield
+
+        async for answer in chat_bot_client.answer(_stripe_chat_history(self.chat_history)):
             self.chat_history[-1] = (
                 self.chat_history[-1][0],
                 answer,
             )
             yield
+
+        db_client = DatabaseClient(model='mongodb')
+        db_client.insert(Message(
+            user_id=uuid.uuid4(),
+            content=f'User: {self.chat_history[-1][0]}\nBot: {self.chat_history[-1][1]}',
+            session_id=uuid.uuid4(),
+            prompt_id=uuid.uuid4(),
+        ))
