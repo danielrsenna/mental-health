@@ -9,7 +9,6 @@ class _Message_v0(BaseModel):
     content: str
     session_id: uuid.UUID
     is_read: bool = True
-    prompt_id: uuid.UUID
 
 
 Message = _Message_v0

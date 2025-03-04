@@ -65,5 +65,4 @@ class ChatState(rx.State):
             user_id=self.user_id,
             content=f'User: {self.chat_history[-1][0]}\nBot: {self.chat_history[-1][1]}',
             session_id=self.session_id,
-            prompt_id=uuid.uuid4(),
         ))
