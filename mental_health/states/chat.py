@@ -1,9 +1,16 @@
-# state.py
 import os
 
-from openai import AsyncOpenAI
-
+import dotenv
 import reflex as rx
+
+from mental_health.services.gpt_client import GptClient
+
+
+def _stripe_chat_history(chat_history):
+    return '\n'.join(
+        f'Q: {question}\nA: {answer}\n'
+        for question, answer in chat_history
+    )
 
 
 class State(rx.State):
@@ -14,38 +21,19 @@ class State(rx.State):
     chat_history: list[tuple[str, str]]
 
     async def answer(self):
-        # Our chatbot has some brains now!
-        client = AsyncOpenAI(
-            api_key=os.environ["OPENAI_API_KEY"]
-        )
+        dotenv.load_dotenv()
 
-        session = await client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "user", "content": self.question}
-            ],
-            stop=None,
-            temperature=0.7,
-            stream=True,
-        )
+        client = GptClient()
 
-        # Add to the answer as the chatbot responds.
-        answer = ""
+        answer = ''
         self.chat_history.append((self.question, answer))
 
-        # Clear the question input.
-        self.question = ""
-        # Yield here to clear the frontend input before continuing.
-        yield
-
-        async for item in session:
-            if hasattr(item.choices[0].delta, "content"):
-                if item.choices[0].delta.content is None:
-                    # presence of 'None' indicates the end of the response
-                    break
-                answer += item.choices[0].delta.content
-                self.chat_history[-1] = (
-                    self.chat_history[-1][0],
-                    answer,
-                )
+        async for answer in client.answer(_stripe_chat_history(self.chat_history)):
+            if self.question:
+                self.question = ''
                 yield
+            self.chat_history[-1] = (
+                self.chat_history[-1][0],
+                answer,
+            )
+            yield
