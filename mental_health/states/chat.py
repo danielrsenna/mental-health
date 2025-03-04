@@ -61,9 +61,9 @@ class ChatState(rx.State):
             yield
 
         db_client = DatabaseClient(model='mongodb')
-        db_client.insert(Message(
+        db_client.table('messages').insert(Message(
             user_id=self.user_id,
             content=f'User: {self.chat_history[-1][0]}\nBot: {self.chat_history[-1][1]}',
-            session_id=self.session,
+            session_id=self.session_id,
             prompt_id=uuid.uuid4(),
         ))
