@@ -1,6 +1,8 @@
 # chatapp.py
 import reflex as rx
 
+from ..ui import sidebar_chat
+
 
 from ..states.chat import State
 from ..styles import chatpage as style
@@ -20,11 +22,13 @@ def qa(question: str, answer: str) -> rx.Component:
 
 
 def chat() -> rx.Component:
-    return rx.box(
+    return rx.flex(
         rx.foreach(
             State.chat_history,
             lambda messages: qa(messages[0], messages[1]),
-        )
+        ),
+        width="40vw",
+        direction="column",
     )
 
 
@@ -32,25 +36,37 @@ def action_bar() -> rx.Component:
     return rx.hstack(
         rx.input(
             value=State.question,
-            placeholder="Ask a question",
+            placeholder="Converse com Kuatan",
             on_change=State.set_question,
             style=style.input_style,
         ),
         rx.button(
-            "Ask",
+            "Enviar",
             on_click=State.answer,
             style=style.button_style,
         ),
     )
 
+def main_section() -> rx.Component:
+    return rx.flex(
+        chat(),
+        action_bar(),
+        align='center',
+        direction="column",
+        justify='end',
+        #background_color=rx.color("gray", 5),
+        width="100vw",
+        padding="3em",
+    )
 
 def chatpage() -> rx.Component:
-    return rx.center(
-        rx.vstack(
-            chat(),
-            action_bar(),
-            align="center",
-        )
+    return rx.flex(
+        sidebar_chat(),
+        rx.divider(orientation="vertical"),
+        main_section(),
+        direction="row",
+        height="100vh",
+        width="100vw",
     )
 
 
