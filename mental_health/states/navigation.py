@@ -1,6 +1,7 @@
 import reflex as rx
 
 HOME_ROUTE='/'
+AUTH_ROUTE='/auth'
 CHAT_ROUTE='/chatpage'
 STARTHERE_ROUTE='/comeceaqui'
 
