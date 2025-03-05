@@ -18,5 +18,6 @@ app = rx.App(
 
 #Website Pages
 app.add_page(pages.homepage, navigation.HOME_ROUTE, title="Homepage")
+app.add_page(pages.authpage, navigation.AUTH_ROUTE, title="Auth")
 app.add_page(pages.startherepage, navigation.STARTHERE_ROUTE, title="Comece Aqui")
 app.add_page(pages.chatpage, navigation.CHAT_ROUTE, title="Chat", on_load=ChatState.on_load)
