@@ -17,17 +17,22 @@ def qa(question: str, answer: str) -> rx.Component:
         margin_y="1em",
     )
 
-
 def chat() -> rx.Component:
-    return rx.flex(
-        rx.foreach(
-            ChatState.chat_history,
-            lambda messages: qa(messages[0], messages[1]),
+    return rx.scroll_area(
+        rx.flex(
+            rx.foreach(
+                ChatState.chat_history,
+                lambda messages: qa(messages[0], messages[1]),
+            ),
+            width="97%",
+            direction="column",
+            align="stretch",
         ),
-        width="40vw",
-        direction="column",
-    )
-
+        type="hover",
+        scrollbars="vertical",
+        height="85vh",
+        width="45vw",
+    ),
 
 def action_bar() -> rx.Component:
     return rx.hstack(
@@ -51,7 +56,6 @@ def main_section() -> rx.Component:
         align='center',
         direction="column",
         justify='end',
-        #background_color=rx.color("gray", 5),
         width="100vw",
         padding="3em",
     )
