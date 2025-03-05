@@ -10,7 +10,7 @@ def navbar() -> rx.Component:
                             src="/sloth_logo_white.jpg",
                             width="4em",
                             height="auto",
-                            #border_radius="25%",
+                            border_radius="25%",
                         ),
                         href=navigation.HOME_ROUTE,
                     ),
@@ -33,7 +33,7 @@ def navbar() -> rx.Component:
                 justify="between",
             ),
             rx.cond(
-                rx.State.router.page.path != '/comeceaqui',
+                rx.State.router.page.path == navigation.HOME_ROUTE,
                 rx.flex(
                     rx.link( #nome
                         rx.text(
@@ -61,8 +61,7 @@ def navbar() -> rx.Component:
                         background_color=rx.color("gray", 12),
                         high_contrast=False,
                     ),
-                    #href=navigation_web.routes.LOGIN_ROUTE
-                    href=navigation.CHAT_ROUTE,
+                    href=navigation.LOGIN_ROUTE,
                 ),
                 align="center",
                 spacing="3",
