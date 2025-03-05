@@ -14,42 +14,17 @@ class ChatState(rx.State):
     # Keep track of the chat history as a list of (question, answer) tuples.
     chat_history: list[tuple[str, str]]
 
-    # The user_id is stored in a cookie and is used to identify the user.
-    user_id: str = rx.Cookie(
-        '',
-        name='user_id',
-        path='/',
-        secure=False,
-        max_age=60*60  # 1 hour
-    )
+    # The current user's ID.
+    _user_id: str
 
-    # The session_id is stored in a cookie and is used to identify the session.
-    session_id: str = rx.Cookie(
-        '',
-        name='session_id',
-        path='/',
-        secure=False,
-        max_age=60*60  # 1 hour
-    )
+    # The current session ID.
+    _session_id: str
 
+    @rx.event
     def on_load(self):
-        if not self.user_id:
-            self.user_id = str(uuid.uuid4())
-
-        if not self.session_id:
-            self.session_id = str(uuid.uuid4())
-            DatabaseClient(model='mongodb').table('sessions').insert(Session(uuid=self.session_id))
-
-    def refresh_cookies(self):
-        self.user_id = str(uuid.uuid4())
-        self.session_id = str(uuid.uuid4())
-        DatabaseClient(model='mongodb').table('sessions').insert(Session(uuid=self.session_id))
+        self._start_new_session()
 
     async def answer(self):
-        # let's ensure we have valid cookies.
-        if not self.session_id or not self.user_id:
-            self.refresh_cookies()
-
         chat_bot_client = GptClient()
 
         self.chat_history.append((self.question, ""))
@@ -69,13 +44,18 @@ class ChatState(rx.State):
         question, answer = self.chat_history[-1]
         db_client.table('messages').insert(
             Message(
-                user_id=self.user_id,
+                user_id=self._user_id,
                 content=question,
-                session_id=self.session_id,
+                session_id=self._session_id,
         )).insert(
             Message(
                 user_id=BOT_USER_ID,
                 content=answer,
-                session_id=self.session_id,
+                session_id=self._session_id,
         ))
-        
+
+    def _start_new_session(self):
+        self._user_id = str(uuid.uuid4())
+        self._session_id = str(uuid.uuid4())
+        DatabaseClient(model='mongodb').table('sessions').insert(Session(uuid=self._session_id))
+        self.chat_history = []
