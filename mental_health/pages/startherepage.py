@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..ui import navbar
+from ..states import navigation
 
 def startherepage() -> rx.Component:
     # Welcome Page (Index)
@@ -230,7 +231,7 @@ def hero_section() -> rx.Component:
                     background_color=rx.color("gray", 12),
                     high_contrast=False,
                 ),
-                href="/chatpage",
+                href=navigation.LOGIN_ROUTE,
             ),
             align="center",
             spacing="3",
