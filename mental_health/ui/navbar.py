@@ -32,17 +32,20 @@ def navbar() -> rx.Component:
                 align="center",
                 justify="between",
             ),
-            rx.flex(
-                rx.link( #nome
-                    rx.text(
-                        "Comece aqui",
-                        font_size="18px",
-                        #font_family= "Garamond",
-                        weight="bold",
-                        color="#000000",
+            rx.cond(
+                rx.State.router.page.path != '/comeceaqui',
+                rx.flex(
+                    rx.link( #nome
+                        rx.text(
+                            "Comece aqui",
+                            font_size="18px",
+                            #font_family= "Garamond",
+                            weight="bold",
+                            color="#000000",
+                        ),
+                        href=navigation.STARTHERE_ROUTE,
+                        underline="hover",
                     ),
-                    href=navigation.STARTHERE_ROUTE,
-                    underline="hover",
                 ),
             ),
             rx.flex( #botão à direita
