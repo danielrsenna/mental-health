@@ -20,10 +20,6 @@ class ChatState(rx.State):
     # The current session ID.
     _session_id: str
 
-    @rx.event
-    def on_load(self):
-        self._start_new_session()
-
     async def answer(self):
         chat_bot_client = GptClient()
 
