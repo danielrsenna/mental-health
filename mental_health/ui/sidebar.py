@@ -6,8 +6,8 @@ def sidebar_item(
 ) -> rx.Component:
     return rx.link(
         rx.hstack(
-            rx.icon(icon),
-            rx.text(text, size="4", font_color="gray-12"),
+            rx.icon(icon, color="#000000"),
+            rx.text(text, size="4", color="#000000",font_weight="bold",font_family= "Garamond"),
             width="100%",
             padding_x="0.5rem",
             padding_y="0.75rem",
@@ -29,10 +29,10 @@ def sidebar_item(
 
 def sidebar_items() -> rx.Component:
     return rx.vstack(
-        sidebar_item("Dashboard", "layout-dashboard", "/#"),
-        sidebar_item("Projects", "square-library", "/#"),
-        sidebar_item("Analytics", "bar-chart-4", "/#"),
-        sidebar_item("Messages", "mail", "/#"),
+        sidebar_item("Início", "layout-dashboard", "/"),
+        #sidebar_item("Projects", "square-library", "/#"),
+        #sidebar_item("Analytics", "bar-chart-4", "/#"),
+        #sidebar_item("Messages", "mail", "/#"),
         spacing="1",
         width="100%",
     )
@@ -42,14 +42,24 @@ def sidebar_chat() -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.hstack(
-                rx.image(
-                    src="/logo.jpg",
-                    width="2.25em",
-                    height="auto",
-                    border_radius="25%",
+                rx.link(
+                    rx.image(
+                        src="/sloth_logo_white.jpg",
+                        width="3em",
+                        height="auto",
+                    ),
+                    href='/',
                 ),
-                rx.heading(
-                    "Reflex", size="7", weight="bold"
+                rx.link(
+                    rx.heading(
+                        "Kuatan.AI",
+                        size="7",
+                        weight="bold",
+                        font_family= "Garamond",
+                        color="#000000",
+                    ),
+                    href='/', 
+                    underline="none",
                 ),
                 align="center",
                 justify="start",
@@ -61,10 +71,10 @@ def sidebar_chat() -> rx.Component:
             rx.vstack(
                 rx.vstack(
                     sidebar_item(
-                        "Settings", "settings", "/#"
+                        "Configurações", "settings", "/#"
                     ),
                     sidebar_item(
-                        "Log out", "log-out", "/#"
+                        "Sair", "log-out", "/"
                     ),
                     spacing="1",
                     width="100%",
@@ -74,12 +84,13 @@ def sidebar_chat() -> rx.Component:
                     rx.icon_button(
                         rx.icon("user"),
                         size="3",
+                        background="#000000",
                         radius="full",
                     ),
                     rx.vstack(
                         rx.box(
                             rx.text(
-                                "My account",
+                                "Meu Perfil",
                                 size="3",
                                 weight="bold",
                             ),
