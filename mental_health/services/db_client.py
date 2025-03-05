@@ -5,6 +5,9 @@ from supabase import create_client
 from pymongo import MongoClient
 from pydantic import BaseModel
 
+from mental_health.models.message import Message
+from mental_health.models.session import Session
+
 
 dotenv.load_dotenv()
 
@@ -33,11 +36,20 @@ class _MongoDB:
     def table(self, table_name: str):
         self._collection = self._client[table_name]
 
-    def insert(self, model: BaseModel):
+    def _insert_many(self, models: list[BaseModel]):
+        self._collection.insert_many([model.model_dump() for model in models])
+
+    def _insert_one(self, model: BaseModel):
+        self._collection.insert_one(model.model_dump())
+
+    def insert(self, model: BaseModel|list[BaseModel]):
         if self._collection is None:
             raise ValueError('No collection selected.')
 
-        self._collection.insert_one(model.model_dump())
+        if isinstance(model, list):
+            self._insert_many(model)
+        else:
+            self._insert_one(model)
 
 
 class DatabaseClient:
@@ -53,10 +65,28 @@ class DatabaseClient:
 
         self._client = self.MODELS[model]()
 
-    def table(self, table_name: str):
+    def save_messages(self, messages: Message|list[Message]):
+        if not isinstance(messages, list) or not all(isinstance(message, Message) for message in messages):
+            raise TypeError('Expected a list of Message objects.')
+
+        self._table('messages')._insert(messages)
+
+    def save_message(self, message: Message):
+        if not isinstance(message, Message):
+            raise TypeError('Expected a Message object.')
+
+        self._table('messages')._insert(message)
+
+    def save_session(self, session: Session):
+        if not isinstance(session, Session):
+            raise TypeError('Expected a Session object.')
+
+        self._table('sessions')._insert(session)
+
+    def _table(self, table_name: str):
         self._client.table(table_name)
         return self
 
-    def insert(self, data: dict):
+    def _insert(self, data: BaseModel):
         self._client.insert(data)
         return self
