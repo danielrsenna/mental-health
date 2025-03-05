@@ -7,14 +7,6 @@ from mental_health.services.gpt_client import GptClient
 from mental_health.services.db_client import DatabaseClient
 from mental_health.models import Message
 
-
-def _stripe_chat_history(chat_history):
-    return '\n'.join(
-        f'Q: {question}\nA: {answer}\n'
-        for question, answer in chat_history
-    )
-
-
 class ChatState(rx.State):
     # The current question being asked.
     question: str
@@ -28,7 +20,7 @@ class ChatState(rx.State):
         name='user_id',
         path='/',
         secure=False,
-        max_age=60*60 # 1 hour
+        max_age=60*60  # 1 hour
     )
 
     # The session_id is stored in a cookie and is used to identify the session.
@@ -37,7 +29,7 @@ class ChatState(rx.State):
         name='session_id',
         path='/',
         secure=False,
-        max_age=60*60 # 1 hour
+        max_age=60*60  # 1 hour
     )
 
     def on_load(self):
@@ -60,19 +52,17 @@ class ChatState(rx.State):
 
         chat_bot_client = GptClient()
 
-        answer = ''
-        self.chat_history.append((self.question, answer))
+        self.chat_history.append((self.question, ""))
 
-        # clear the prompt input
+        # clear user input
+        user_question = self.question
         self.question = ''
         yield
 
-        async for answer in chat_bot_client.answer(_stripe_chat_history(self.chat_history)):
-            self.chat_history[-1] = (
-                self.chat_history[-1][0],
-                answer,
-            )
-            yield
+        answer = await chat_bot_client.answer(self.chat_history, user_question)
+
+        self.chat_history[-1] = (self.chat_history[-1][0], answer)
+        yield
 
         db_client = DatabaseClient(model='mongodb')
 
@@ -88,3 +78,4 @@ class ChatState(rx.State):
                 content=answer,
                 session_id=self.session_id,
         ))
+        
