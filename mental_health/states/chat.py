@@ -15,10 +15,15 @@ class ChatState(rx.State):
     chat_history: list[tuple[str, str]]
 
     # The current user's ID.
-    _user_id: str
+    _user_id: uuid.UUID
 
     # The current session ID.
-    _session_id: str
+    _session_id: uuid.UUID
+
+    def on_load(self):
+        if not self._user_id or not self._session_id:
+            self._start_new_session()
+
 
     async def answer(self):
         chat_bot_client = GptClient()
@@ -52,7 +57,7 @@ class ChatState(rx.State):
         ])
 
     def _start_new_session(self):
-        self._user_id = str(uuid.uuid4())
-        self._session_id = str(uuid.uuid4())
+        self._user_id = uuid.uuid4()
+        self._session_id = uuid.uuid4()
         DatabaseClient(model='mongodb').save_session(Session(uuid=self._session_id))
         self.chat_history = []
