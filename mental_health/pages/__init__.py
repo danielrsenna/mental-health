@@ -1,10 +1,10 @@
 from .homepage import homepage
 from .chatpage import chatpage
 from .startherepage import startherepage
-from .authpage import authpage
+from.loginpage import loginpage
 
 __all__ = [
-    'authpage'
+    'loginpage',
     'homepage',
     'chatpage',
     'startherepage',
