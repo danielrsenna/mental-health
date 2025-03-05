@@ -60,7 +60,7 @@ def hero_section() -> rx.Component:
                         font_family= "Garamond",
                     ),
                     rx.text(
-                        "Essa jornada pode ser solitária, confusa e, às vezes, exaustiva. Mas você não precisa percorrê-la sozinho.",
+                        "Essa jornada pode ser solitária, confusa e, às vezes, exaustiva. Mas você não precisa percorrê-la sozinho(a/e).",
                         text_align="left",
                         color="#000000", 
                         font_size="20px",
@@ -80,7 +80,7 @@ def hero_section() -> rx.Component:
                         font_family= "Garamond",
                     ),
                     rx.text(
-                        "Surgiu do desejo genuíno de tornar essa caminhada um pouco mais leve. De ajudar qualquer um, independentemente dos recursos que tenha, a cuidar da sua saúde mental de forma acessível, contínua e eficaz.",
+                        "Surgiu o desejo genuíno de tornar essa caminhada um pouco mais leve. De ajudar qualquer um, independentemente dos recursos que tenha, a cuidar da sua saúde mental de forma acessível, contínua e eficaz.",
                         text_align="left",
                         color="#000000", 
                         font_size="20px",
