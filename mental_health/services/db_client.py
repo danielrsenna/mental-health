@@ -1,10 +1,12 @@
 import os
 
+from cryptography.fernet import Fernet
 import dotenv
 from supabase import create_client
 from pymongo import MongoClient
 from pydantic import BaseModel
 
+from mental_health.feature_flags import FeatureFlags
 from mental_health.models.message import Message
 from mental_health.models.session import Session
 
@@ -69,11 +71,20 @@ class DatabaseClient:
         if not isinstance(messages, list) or not all(isinstance(message, Message) for message in messages):
             raise TypeError('Expected a list of Message objects.')
 
+        if FeatureFlags.is_message_encryption_enabled():
+            for message in messages:
+                message.content = \
+                    Fernet(os.environ['FERNET_KEY']).encrypt(message.content.encode('utf-8'))
+
         self._table('messages')._insert(messages)
 
     def save_message(self, message: Message):
         if not isinstance(message, Message):
             raise TypeError('Expected a Message object.')
+
+        if FeatureFlags.is_message_encryption_enabled():
+            message.content = \
+                Fernet(os.environ['FERNET_KEY']).encrypt(message.content.encode('utf-8'))
 
         self._table('messages')._insert(message)
 
