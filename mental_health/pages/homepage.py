@@ -66,7 +66,7 @@ def hero_section() -> rx.Component:
                 background_color=rx.color("gray", 12),
                 high_contrast=False,
             ),
-            href=navigation.LOGIN_ROUTE,
+            href=navigation.CHAT_ROUTE,
         ),
         spacing="2",
         direction="column",
