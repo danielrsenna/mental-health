@@ -1,35 +1,18 @@
+import functools
 import os
 
 import reflex as rx
 
-from ..ui import navbar
 from mental_health.states.auth import AuthState
+from mental_health.ui import navbar, google_auth_buttom
+from mental_health.ui.google_login_buttom import GoogleOAuthProvider
 
-class GoogleOAuthProvider(rx.Component):
-    library = "@react-oauth/google"
-    tag = "GoogleOAuthProvider"
-
-    client_id: rx.Var[str]
-
-class GoogleLogin(rx.Component):
-    library = "@react-oauth/google"
-    tag = "GoogleLogin"
-
-    on_success: rx.EventHandler[lambda data: [data]]
-
-def authpage() -> rx.Component:
-    return rx.vstack(
-        GoogleOAuthProvider.create(
-            GoogleLogin.create(on_success=AuthState.on_success),
-            client_id=os.environ['GOOGLE_CLIENT_ID'],
-        )
-    )
 
 def loginpage() -> rx.Component:
     # Welcome Page (Index)
     return rx.flex(
         navbar(),
-        login_section(),
+        _login_section(),
         #footer(),
         direction="column",
         justify="center",
@@ -38,7 +21,8 @@ def loginpage() -> rx.Component:
         height="100vh",
     )
 
-def login_section() -> rx.Component:
+
+def _login_section() -> rx.Component:
     return rx.flex(
         rx.card(
             rx.vstack(
@@ -128,7 +112,7 @@ def login_section() -> rx.Component:
                     align="center",
                     width="100%",
                 ),
-                authpage(),
+                google_auth_buttom(),
                 spacing="6",
                 width="100%",
                 align="center",
@@ -145,3 +129,20 @@ def login_section() -> rx.Component:
         align="center",
         #padding="5em",
     )
+
+
+def require_login(page) -> rx.Component:
+    @functools.wraps(page)
+    def _auth_wrapper() -> rx.Component:
+        return GoogleOAuthProvider.create(
+            rx.cond(
+                AuthState.is_hydrated,
+                rx.cond(
+                    AuthState.is_token_valid, page(), loginpage()
+                ),
+                rx.spinner(),
+            ),
+            client_id=os.environ['GOOGLE_CLIENT_ID'],
+        )
+
+    return _auth_wrapper

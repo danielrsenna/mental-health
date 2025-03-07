@@ -1,8 +1,10 @@
 import reflex as rx
 
-from ..ui import sidebar_chat
-from ..states.chat import ChatState
-from ..styles import chatpage as style
+from mental_health.pages.loginpage import require_login
+from mental_health.ui import sidebar_chat
+from mental_health.states.chat import ChatState
+from mental_health.styles import chatpage as style
+
 
 def qa(question: str, answer: str) -> rx.Component:
     return rx.box(
@@ -16,6 +18,7 @@ def qa(question: str, answer: str) -> rx.Component:
         ),
         margin_y="1em",
     )
+
 
 def chat() -> rx.Component:
     return rx.scroll_area(
@@ -34,6 +37,7 @@ def chat() -> rx.Component:
         width="45vw",
     ),
 
+
 def action_bar() -> rx.Component:
     return rx.hstack(
         rx.input(
@@ -49,6 +53,7 @@ def action_bar() -> rx.Component:
         ),
     )
 
+
 def main_section() -> rx.Component:
     return rx.flex(
         chat(),
@@ -60,6 +65,8 @@ def main_section() -> rx.Component:
         padding="3em",
     )
 
+
+@require_login
 def chatpage() -> rx.Component:
     return rx.flex(
         sidebar_chat(),
