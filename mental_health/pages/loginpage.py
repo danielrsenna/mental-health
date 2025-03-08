@@ -135,10 +135,10 @@ def require_login(page) -> rx.Component:
     @functools.wraps(page)
     def _auth_wrapper() -> rx.Component:
         return GoogleOAuthProvider.create(
-            rx.cond(
-                AuthState.is_hydrated,
-                rx.cond(
-                    AuthState.is_token_valid, page(), loginpage()
+            rx.cond(AuthState.is_hydrated,
+                rx.cond(AuthState.is_token_valid,
+                    page(),
+                    loginpage()
                 ),
                 rx.spinner(),
             ),
