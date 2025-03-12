@@ -3,11 +3,14 @@ import os
 import time
 
 from google.auth.transport import requests
-from google.auth.exceptions import GoogleAuthError
 from google.oauth2.id_token import verify_oauth2_token
 import reflex as rx
 
+from mental_health.states import navigation
+
 class AuthState(rx.State):
+
+    # The Google ID token as a JSON string.
     _id_token_json: str = rx.Cookie(
         name='id_token_json',
     )
@@ -36,3 +39,8 @@ class AuthState(rx.State):
         if self.tokeninfo:
             return self.tokeninfo.get('exp', 0.0) > time.time()
         return False
+
+    @rx.event
+    def require_auth(self):
+        if not self.is_token_valid:
+            return rx.redirect(navigation.LOGIN_ROUTE)

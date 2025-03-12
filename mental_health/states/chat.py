@@ -22,6 +22,7 @@ class ChatState(rx.State):
     # The current session ID.
     _session_id: uuid.UUID
 
+    @rx.event
     def on_load(self):
         if not self._user_id or not self._session_id:
             self._start_new_session()
