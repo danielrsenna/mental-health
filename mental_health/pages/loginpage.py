@@ -17,7 +17,6 @@ def loginpage() -> rx.Component:
         direction="column",
         justify="center",
         align="center",
-        background_color="#ffffff",
         height="100vh",
     )
 

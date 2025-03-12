@@ -6,8 +6,8 @@ def sidebar_item(
 ) -> rx.Component:
     return rx.link(
         rx.hstack(
-            rx.icon(icon, color="#000000"),
-            rx.text(text, size="4", color="#000000",font_weight="bold",font_family= "Garamond"),
+            rx.icon(icon),
+            rx.text(text, size="4", font_weight="bold", font_family= "Garamond"),
             width="100%",
             padding_x="0.5rem",
             padding_y="0.75rem",
@@ -56,7 +56,6 @@ def sidebar_chat() -> rx.Component:
                         size="7",
                         weight="bold",
                         font_family= "Garamond",
-                        color="#000000",
                     ),
                     href='/', 
                     underline="none",

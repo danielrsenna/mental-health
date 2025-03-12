@@ -2,19 +2,21 @@
 import reflex as rx
 
 from mental_health.states.auth import AuthState
+from mental_health.styles.main import style
 
 from . import pages
 from .states import navigation
 from .states.chat import ChatState
 
 app = rx.App(
+    style=style,
     theme=rx.theme(
-        #appearance="light", 
+        # appearance="dark",
         # has_background=True, 
         # panel_background="solid",
         scaling="90%",
         #radius="medium", 
-        #accent_color="bronze",
+        accent_color="gray",
     )
 )
 

@@ -20,7 +20,6 @@ def navbar() -> rx.Component:
                             font_size="30px",
                             font_family= "Garamond",
                             weight="bold",
-                            color="#000000",
                         ),
                         href=navigation.HOME_ROUTE,
                         underline="none",
@@ -41,7 +40,6 @@ def navbar() -> rx.Component:
                             font_size="18px",
                             #font_family= "Garamond",
                             weight="bold",
-                            color="#000000",
                         ),
                         href=navigation.STARTHERE_ROUTE,
                         underline="hover",
@@ -58,8 +56,6 @@ def navbar() -> rx.Component:
                         weight="bold",
                         variant="solid",
                         radius="full",
-                        background_color=rx.color("gray", 12),
-                        high_contrast=False,
                     ),
                     href=navigation.LOGIN_ROUTE,
                 ),
@@ -73,7 +69,6 @@ def navbar() -> rx.Component:
             padding_left="2em",
             padding_right="2em",
             justify="between",
-            #background_color="blue",
             width="99.5%",
         )
 
