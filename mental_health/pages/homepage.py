@@ -12,7 +12,6 @@ def homepage() -> rx.Component:
         direction="column",
         justify="center",
         align="center",
-        background_color="#ffffff",
         height="100vh",
     )
 
@@ -28,8 +27,6 @@ def hero_section() -> rx.Component:
             font_weight="bold",
             line_height="1",
             font_family= "Garamond",
-            #background_color="#000000",
-            color="#000000",  
             width="50%",
         ),
         # rx.text(
@@ -46,8 +43,6 @@ def hero_section() -> rx.Component:
         rx.text(
             "Kuatan Saúde: Uma plataforma para pacientes, para psicólogos, para você.",
             text_align="left",
-            color="#000000", 
-            #background_color="#000000",
             font_size="30px",
             font_family= "Garamond",
             font_weight="bold",
@@ -63,8 +58,6 @@ def hero_section() -> rx.Component:
                 weight="bold",
                 variant="solid",
                 radius="full",
-                background_color=rx.color("gray", 12),
-                high_contrast=False,
             ),
             href=navigation.CHAT_ROUTE,
         ),
